@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Joyeux Anniversaire Miradie 🌸</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400&family=Dancing+Script:wght@400;600&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --rose-pale: #fce8f0;
+    --rose-doux: #f4a7c3;
+    --rose-vif: #e8649a;
+    --rose-profond: #c94c82;
+    --or: #d4a853;
+    --or-pale: #f9e8c1;
+    --lavande: #e8d5f5;
+    --blanc: #fffaf9;
+    --texte: #3a1f2e;
+    --texte-doux: #7a4a63;
+  }
+
+  html, body {
+    width: 100%; height: 100%;
+    background: var(--blanc);
+    font-family: 'DM Sans', sans-serif;
+    color: var(--texte);
+    overflow: hidden;
+  }
+
+  #petals-canvas {
+    position: fixed; top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none; z-index: 0;
+  }
+
+  .scene {
+    position: fixed; top: 0; left: 0;
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.8s ease;
+    z-index: 10; padding: 2rem;
+  }
+  .scene.active { opacity: 1; pointer-events: all; }
+
+  /* ===== SCÈNE 1 ===== */
+  #scene-1 {
+    background: radial-gradient(ellipse at 50% 40%, #fff0f6 0%, #fce8f0 55%, #f5c6df 100%);
+  }
+  .deco-top {
+    font-size: 2rem; margin-bottom: 1rem;
+    opacity: 0; transition: opacity 0.5s ease;
+    letter-spacing: 0.3em;
+  }
+  .deco-top.visible { opacity: 1; animation: float 3s ease-in-out infinite; }
+
+  .nom-wrapper { text-align: center; margin-bottom: 1.2rem; }
+  .lettre {
+    display: inline-block;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(4rem, 12vw, 9rem);
+    font-weight: 300;
+    color: var(--rose-profond);
+    opacity: 0; transform: translateY(30px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    letter-spacing: 0.05em;
+  }
+  .sous-titre-ouverture {
+    font-family: 'DM Sans', sans-serif;
+    font-size: clamp(0.8rem, 2.5vw, 1rem);
+    font-weight: 300; color: var(--texte-doux);
+    letter-spacing: 0.35em; text-transform: uppercase;
+    opacity: 0; transform: translateY(10px);
+    transition: opacity 0.6s ease 0.3s, transform 0.6s ease 0.3s;
+  }
+  .sous-titre-ouverture.visible { opacity: 1; transform: translateY(0); }
+  .annee-badge {
+    margin-top: 1rem;
+    display: inline-block;
+    background: linear-gradient(135deg, var(--rose-vif), var(--rose-profond));
+    color: white;
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(1.1rem, 3vw, 1.5rem);
+    padding: 0.4rem 1.4rem;
+    border-radius: 50px;
+    opacity: 0; transform: scale(0.8);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    box-shadow: 0 4px 20px rgba(201,76,130,0.3);
+  }
+  .annee-badge.visible { opacity: 1; transform: scale(1); }
+  .deco-bottom {
+    font-size: 1.5rem; margin-top: 1.2rem;
+    opacity: 0; letter-spacing: 0.4em;
+    transition: opacity 0.5s ease;
+  }
+  .deco-bottom.visible { opacity: 1; animation: float 3.5s ease-in-out infinite reverse; }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  /* ===== SCÈNE 2 : ÉTOILES ===== */
+  #scene-2 {
+    background: linear-gradient(160deg, #12060f 0%, #2d1020 45%, #1a0814 100%);
+  }
+  #stars-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; }
+  .star {
+    position: absolute; background: white; border-radius: 50%;
+    animation: twinkle var(--dur, 2s) ease-in-out infinite;
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.5); }
+  }
+  .map-container {
+    position: relative; width: min(420px, 90vw); height: 180px; margin-bottom: 2.5rem;
+  }
+  .ville {
+    position: absolute; display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
+  }
+  .ville.kinshasa { left: 15%; top: 50%; transform: translateY(-50%); }
+  .ville.lubumbashi { right: 15%; top: 50%; transform: translateY(-50%); }
+  .ville-dot {
+    width: 14px; height: 14px; border-radius: 50%;
+    background: var(--rose-vif);
+    box-shadow: 0 0 0 4px rgba(232,100,154,0.2), 0 0 20px rgba(232,100,154,0.5);
+    animation: pulse-dot 2s ease-in-out infinite;
+  }
+  .ville.lubumbashi .ville-dot {
+    background: var(--or);
+    box-shadow: 0 0 0 4px rgba(212,168,83,0.2), 0 0 20px rgba(212,168,83,0.5);
+    animation: pulse-dot-gold 2s ease-in-out infinite;
+  }
+  @keyframes pulse-dot {
+    0%,100% { box-shadow: 0 0 0 4px rgba(232,100,154,0.2), 0 0 20px rgba(232,100,154,0.4); }
+    50% { box-shadow: 0 0 0 8px rgba(232,100,154,0.1), 0 0 35px rgba(232,100,154,0.7); }
+  }
+  @keyframes pulse-dot-gold {
+    0%,100% { box-shadow: 0 0 0 4px rgba(212,168,83,0.2), 0 0 20px rgba(212,168,83,0.4); }
+    50% { box-shadow: 0 0 0 8px rgba(212,168,83,0.1), 0 0 35px rgba(212,168,83,0.7); }
+  }
+  .ville-label {
+    font-size: 0.72rem; font-weight: 300;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: rgba(255,255,255,0.7);
+  }
+  .ligne-svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+  .ligne-path {
+    fill: none; stroke: url(#lineGrad); stroke-width: 1.5;
+    stroke-dasharray: 500; stroke-dashoffset: 500;
+    transition: stroke-dashoffset 2s ease 0.5s;
+  }
+  .ligne-path.drawn { stroke-dashoffset: 0; }
+  .coeur-ligne {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.4rem; opacity: 0;
+    transition: opacity 0.5s ease 2.5s;
+    filter: drop-shadow(0 0 8px rgba(232,100,154,0.8));
+  }
+  .coeur-ligne.visible { opacity: 1; }
+  .texte-distance { text-align: center; color: rgba(255,255,255,0.9); }
+  .texte-distance h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.4rem, 4vw, 2rem);
+    font-weight: 300; font-style: italic; margin-bottom: 0.8rem;
+    opacity: 0; transform: translateY(15px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .texte-distance p {
+    font-size: clamp(0.8rem, 2vw, 0.95rem);
+    font-weight: 300; color: rgba(255,255,255,0.6);
+    letter-spacing: 0.05em; opacity: 0;
+    transition: opacity 0.7s ease 0.3s;
+  }
+  .texte-distance h2.visible, .texte-distance p.visible { opacity: 1; transform: translateY(0); }
+
+  /* ===== SCÈNE 3 : LETTRE ===== */
+  #scene-3 {
+    background: linear-gradient(135deg, #fff5f9 0%, #fce8f0 60%, #f5eaff 100%);
+    overflow-y: auto; justify-content: flex-start;
+    padding-top: 3rem; padding-bottom: 5rem;
+  }
+  .lettre-container { max-width: 580px; width: 100%; position: relative; }
+  .stetho-deco {
+    text-align: center; font-size: 2rem; margin-bottom: 1.2rem;
+    opacity: 0; transition: opacity 0.6s ease;
+  }
+  .stetho-deco.visible { opacity: 1; }
+  .lettre-titre {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(1.4rem, 4vw, 1.9rem);
+    color: var(--rose-profond); text-align: center;
+    margin-bottom: 2rem; opacity: 0;
+    transition: opacity 0.6s ease 0.2s;
+  }
+  .lettre-titre.visible { opacity: 1; }
+  .paragraphe {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1rem, 2.5vw, 1.2rem);
+    font-weight: 300; line-height: 1.9; color: var(--texte);
+    margin-bottom: 1.6rem;
+    opacity: 0; transform: translateY(20px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+    text-align: center;
+  }
+  .paragraphe.visible { opacity: 1; transform: translateY(0); }
+  .paragraphe em { color: var(--rose-profond); font-style: italic; }
+  .signature {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(1.1rem, 3vw, 1.4rem);
+    color: var(--texte-doux); text-align: center;
+    margin-top: 0.5rem; opacity: 0;
+    transition: opacity 0.7s ease;
+  }
+  .signature.visible { opacity: 1; }
+
+  /* ===== SCÈNE 4 : POÈME ===== */
+  #scene-4 {
+    background: linear-gradient(150deg, #fdf0f8 0%, #f5e8ff 50%, #fce8f0 100%);
+    overflow-y: auto; justify-content: flex-start;
+    padding-top: 3rem; padding-bottom: 5rem;
+  }
+  .poeme-container { max-width: 560px; width: 100%; text-align: center; }
+  .poeme-icon {
+    font-size: 2rem; margin-bottom: 1.2rem;
+    opacity: 0; transition: opacity 0.5s ease;
+  }
+  .poeme-icon.visible { opacity: 1; }
+  .poeme-titre {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(1.3rem, 4vw, 1.8rem);
+    color: var(--rose-profond); margin-bottom: 2rem;
+    opacity: 0; transition: opacity 0.6s ease;
+  }
+  .poeme-titre.visible { opacity: 1; }
+  .vers {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1rem, 2.5vw, 1.2rem);
+    font-weight: 300; line-height: 2; color: var(--texte);
+    margin-bottom: 1.4rem;
+    opacity: 0; transform: translateY(15px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .vers.visible { opacity: 1; transform: translateY(0); }
+  .vers em { color: var(--rose-profond); }
+
+  /* ===== SCÈNE 5 : BÉNÉDICTIONS ===== */
+  #scene-5 {
+    background: linear-gradient(135deg, #fff8f0 0%, #fce8f0 50%, #f9f0ff 100%);
+    overflow-y: auto; justify-content: flex-start;
+    padding-top: 3rem; padding-bottom: 5rem;
+  }
+  .bene-container { max-width: 560px; width: 100%; }
+  .bene-titre {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(1.4rem, 4vw, 2rem);
+    color: var(--rose-profond); text-align: center;
+    margin-bottom: 2rem; opacity: 0;
+    transition: opacity 0.6s ease;
+  }
+  .bene-titre.visible { opacity: 1; }
+  .bene-card {
+    display: flex; align-items: flex-start; gap: 1rem;
+    background: white;
+    border: 1px solid var(--rose-pale);
+    border-left: 4px solid var(--rose-vif);
+    border-radius: 12px;
+    padding: 1rem 1.3rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 20px rgba(201,76,130,0.07);
+    opacity: 0; transform: translateX(-20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .bene-card.visible { opacity: 1; transform: translateX(0); }
+  .bene-emoji { font-size: 1.5rem; flex-shrink: 0; margin-top: 0.1rem; }
+  .bene-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(0.95rem, 2.3vw, 1.1rem);
+    font-weight: 300; line-height: 1.7; color: var(--texte);
+  }
+  .bene-text strong {
+    font-weight: 400; color: var(--rose-profond);
+    font-style: italic;
+  }
+
+  /* ===== SCÈNE 6 : GÂTEAU + FINALE ===== */
+  #scene-6 {
+    background: radial-gradient(ellipse at center, #fff0f8 0%, #fce8f0 50%, #f5d0e8 100%);
+  }
+  #confetti-canvas {
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 100%; pointer-events: none;
+  }
+  .finale-content { text-align: center; z-index: 2; position: relative; }
+
+  /* GÂTEAU SVG */
+  .gateau-wrapper {
+    margin: 0 auto 1.5rem;
+    width: min(200px, 50vw);
+    opacity: 0; transform: scale(0.8);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .gateau-wrapper.visible { opacity: 1; transform: scale(1); }
+
+  .grand-souhait {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.5rem, 9vw, 5.5rem);
+    font-weight: 300; color: var(--rose-profond);
+    line-height: 1.05; opacity: 0; transform: scale(0.85);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+    text-shadow: 0 2px 30px rgba(201,76,130,0.2);
+  }
+  .grand-souhait.visible { opacity: 1; transform: scale(1); }
+  .sous-souhait {
+    font-size: clamp(0.8rem, 2.5vw, 1rem);
+    font-weight: 300; color: var(--texte-doux);
+    letter-spacing: 0.3em; margin-top: 0.4rem;
+    opacity: 0; transition: opacity 0.6s ease 0.4s;
+  }
+  .sous-souhait.visible { opacity: 1; }
+  .badge-medecin {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    background: linear-gradient(135deg, var(--rose-pale), var(--or-pale));
+    border: 1px solid var(--rose-doux); border-radius: 50px;
+    padding: 0.55rem 1.4rem; margin: 1.2rem auto;
+    font-size: 0.85rem; color: var(--texte-doux);
+    opacity: 0; transition: opacity 0.6s ease 0.8s;
+    letter-spacing: 0.04em;
+  }
+  .badge-medecin.visible { opacity: 1; }
+  .message-final {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1rem, 2.5vw, 1.2rem);
+    font-style: italic; color: var(--texte-doux);
+    max-width: 420px; margin: 0 auto; line-height: 1.8;
+    opacity: 0; transition: opacity 0.6s ease 1.2s;
+  }
+  .message-final.visible { opacity: 1; }
+
+  /* Flammes bougies */
+  @keyframes flamme {
+    0%, 100% { transform: scaleY(1) rotate(-3deg); opacity: 1; }
+    25% { transform: scaleY(1.2) rotate(3deg); opacity: 0.9; }
+    50% { transform: scaleY(0.9) rotate(-2deg); opacity: 1; }
+    75% { transform: scaleY(1.15) rotate(2deg); opacity: 0.95; }
+  }
+  .flamme { animation: flamme 0.8s ease-in-out infinite; transform-origin: bottom center; }
+
+  /* ===== BOUTON ===== */
+  .btn-suivant {
+    position: fixed; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+    z-index: 100;
+    background: linear-gradient(135deg, var(--rose-vif), var(--rose-profond));
+    color: white; border: none; border-radius: 50px;
+    padding: 0.75rem 2.2rem;
+    font-family: 'DM Sans', sans-serif; font-size: 0.9rem;
+    font-weight: 300; letter-spacing: 0.12em;
+    cursor: pointer; opacity: 0;
+    transition: opacity 0.5s ease, transform 0.2s;
+    pointer-events: none;
+    box-shadow: 0 4px 20px rgba(201,76,130,0.35);
+  }
+  .btn-suivant.visible { opacity: 1; pointer-events: all; }
+  .btn-suivant:hover { transform: translateX(-50%) translateY(-2px); box-shadow: 0 8px 30px rgba(201,76,130,0.45); }
+
+  /* DOTS */
+  .dots {
+    position: fixed; top: 1.5rem; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 0.5rem; z-index: 100;
+  }
+  .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: rgba(201,76,130,0.2);
+    transition: background 0.3s, transform 0.3s;
+  }
+  .dot.active { background: var(--rose-profond); transform: scale(1.4); }
+</style>
+</head>
+<body>
+
+<canvas id="petals-canvas"></canvas>
+
+<div class="dots">
+  <div class="dot active" id="dot-1"></div>
+  <div class="dot" id="dot-2"></div>
+  <div class="dot" id="dot-3"></div>
+  <div class="dot" id="dot-4"></div>
+  <div class="dot" id="dot-5"></div>
+  <div class="dot" id="dot-6"></div>
+</div>
+
+<!-- SCÈNE 1 : OUVERTURE -->
+<div class="scene active" id="scene-1">
+  <div class="deco-top" id="deco-top">🌸 🌷 🌸</div>
+  <div class="nom-wrapper" id="nom-wrapper"></div>
+  <div class="sous-titre-ouverture" id="sous-titre">Joyeux Anniversaire</div>
+  <div class="annee-badge" id="annee-badge">✨ 21 ans ✨</div>
+  <div class="deco-bottom" id="deco-bottom">💗 🦋 💗</div>
+</div>
+
+<!-- SCÈNE 2 : DISTANCE -->
+<div class="scene" id="scene-2">
+  <div id="stars-bg"></div>
+  <div class="map-container" id="map-container">
+    <svg class="ligne-svg" viewBox="0 0 420 180" preserveAspectRatio="none">
+      <defs>
+        <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" style="stop-color:#e8649a;stop-opacity:1" />
+          <stop offset="50%" style="stop-color:#f9e8c1;stop-opacity:1" />
+          <stop offset="100%" style="stop-color:#d4a853;stop-opacity:1" />
+        </linearGradient>
+      </defs>
+      <path class="ligne-path" id="lp" d="M 80 90 Q 210 40 340 90"/>
+    </svg>
+    <div class="ville kinshasa"><div class="ville-dot"></div><div class="ville-label">Kinshasa</div></div>
+    <div class="coeur-ligne" id="coeur-ligne">💗</div>
+    <div class="ville lubumbashi"><div class="ville-dot"></div><div class="ville-label">Lubumbashi</div></div>
+  </div>
+  <div class="texte-distance">
+    <h2 id="dist-titre">Des kilomètres entre nous,</h2>
+    <p id="dist-sous">mais jamais dans le cœur.</p>
+  </div>
+</div>
+
+<!-- SCÈNE 3 : LETTRE -->
+<div class="scene" id="scene-3">
+  <div class="lettre-container">
+    <div class="stetho-deco" id="stetho">🌸 🩺 🌸</div>
+    <div class="lettre-titre" id="lettre-titre">Pour toi, Miradie</div>
+    <p class="paragraphe" id="p1">
+      On ne s'est pas toujours bien comprises.<br>
+      Il y a eu des silences, des disputes, des moments<br>
+      où on aurait pu chacune partir de son côté.
+    </p>
+    <p class="paragraphe" id="p2">
+      Mais on est restées.<br>
+      Et c'est <em>ça</em>, la vraie amitié :<br>
+      pas l'absence de tempêtes,<br>
+      mais la décision de traverser ensemble.
+    </p>
+    <p class="paragraphe" id="p3">
+      Aujourd'hui la distance nous sépare.<br>
+      Toi à Kin, moi à Lubumbashi.<br>
+      Nos conversations sont rares.<br>
+      Mais mon cœur, lui, ne t'a pas oubliée.
+    </p>
+    <p class="paragraphe" id="p4">
+      Je ne me vois pas me marier<br>
+      sans toi dans cette salle.<br>
+      Tu fais partie de l'histoire que je raconte<br>
+      quand je parle de <em>ma vie</em>.
+    </p>
+    <p class="signature" id="signature">Avec tout mon amour 🌸</p>
+  </div>
+</div>
+
+<!-- SCÈNE 4 : POÈME -->
+<div class="scene" id="scene-4">
+  <div class="poeme-container">
+    <div class="poeme-icon" id="poeme-icon">🌷✨🌷</div>
+    <div class="poeme-titre" id="poeme-titre">Un poème pour toi</div>
+    <div class="vers" id="v1">
+      Tu es venue dans ma vie sans prévenir,<br>
+      une fille qu'on n'imaginait pas retenir,<br>
+      et pourtant te voilà, ancrée dans mon histoire<br>
+      comme les pages qu'on relit pour ne pas oublier.
+    </div>
+    <div class="vers" id="v2">
+      On a ri, on a pleuré, on s'est parfois perdues,<br>
+      mais chaque dispute était une promesse tenue<br>
+      que l'on ne laisserait pas l'autre partir seule<br>
+      dans les méandres d'une vie trop cruelle.
+    </div>
+    <div class="vers" id="v3">
+      Aujourd'hui tu soignes les corps et les âmes,<br>
+      tu portes une blouse avec la grâce d'une femme,<br>
+      qui a choisi de donner ce qu'elle a de meilleur<br>
+      pour que d'autres femmes vivent avec moins de peur.
+    </div>
+    <div class="vers" id="v4">
+      <em>Joyeux anniversaire, belle Miradie.</em><br>
+      Tu es lumière, tu es force, tu es vie.
+    </div>
+  </div>
+</div>
+
+<!-- SCÈNE 5 : BÉNÉDICTIONS -->
+<div class="scene" id="scene-5">
+  <div class="bene-container">
+    <div class="bene-titre" id="bene-titre">🙏 Mes bénédictions pour toi</div>
+    <div class="bene-card" id="b1">
+      <div class="bene-emoji">🌿</div>
+      <div class="bene-text"><strong>Santé et longévité</strong> : Que ton corps soit un temple fort, que chaque matin tu te réveilles avec l'énergie de vivre pleinement.</div>
+    </div>
+    <div class="bene-card" id="b2">
+      <div class="bene-emoji">📖</div>
+      <div class="bene-text"><strong>Excellence dans tes études</strong> : Que chaque page de médecine soit une victoire, et que ton chemin vers la gynécologie soit couronné de succès.</div>
+    </div>
+    <div class="bene-card" id="b3">
+      <div class="bene-emoji">💫</div>
+      <div class="bene-text"><strong>Un avenir radieux</strong> : Que cette 21e année soit le tournant de toutes les belles choses, celles que tu mérites depuis longtemps.</div>
+    </div>
+    <div class="bene-card" id="b4">
+      <div class="bene-emoji">💝</div>
+      <div class="bene-text"><strong>Amour et paix intérieure</strong> : Que tu sois entourée de personnes qui te voient vraiment, et que ton cœur connaisse la paix qu'il cherche.</div>
+    </div>
+    <div class="bene-card" id="b5">
+      <div class="bene-emoji">🌸</div>
+      <div class="bene-text"><strong>Notre amitié</strong> : Que la distance ne soit jamais une fin. Que nos chemins se retrouvent, encore et encore, jusqu'au mariage et au-delà.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SCÈNE 6 : GÂTEAU + FINALE -->
+<div class="scene" id="scene-6">
+  <canvas id="confetti-canvas"></canvas>
+  <div class="finale-content">
+    <!-- Gâteau SVG -->
+    <div class="gateau-wrapper" id="gateau-wrapper">
+      <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" width="100%">
+        <!-- Assiette -->
+        <ellipse cx="100" cy="178" rx="75" ry="10" fill="#f5c6df" opacity="0.5"/>
+        <!-- Corps gâteau bas -->
+        <rect x="30" y="130" width="140" height="50" rx="8" fill="#f4a7c3"/>
+        <rect x="30" y="130" width="140" height="12" rx="4" fill="#e8649a"/>
+        <!-- Rayures décoratives bas -->
+        <line x1="55" y1="142" x2="55" y2="180" stroke="white" stroke-width="2" opacity="0.4"/>
+        <line x1="80" y1="142" x2="80" y2="180" stroke="white" stroke-width="2" opacity="0.4"/>
+        <line x1="105" y1="142" x2="105" y2="180" stroke="white" stroke-width="2" opacity="0.4"/>
+        <line x1="130" y1="142" x2="130" y2="180" stroke="white" stroke-width="2" opacity="0.4"/>
+        <!-- Crème entre couches -->
+        <ellipse cx="100" cy="130" rx="70" ry="8" fill="#fff0f6"/>
+        <path d="M30 130 Q45 118 60 130 Q75 118 90 130 Q105 118 120 130 Q135 118 150 130 Q165 118 170 130" fill="white" opacity="0.8"/>
+        <!-- Corps gâteau haut -->
+        <rect x="45" y="88" width="110" height="45" rx="8" fill="#f9c8df"/>
+        <rect x="45" y="88" width="110" height="10" rx="4" fill="#e8649a"/>
+        <!-- Rayures décoratives haut -->
+        <line x1="68" y1="98" x2="68" y2="133" stroke="white" stroke-width="1.5" opacity="0.4"/>
+        <line x1="90" y1="98" x2="90" y2="133" stroke="white" stroke-width="1.5" opacity="0.4"/>
+        <line x1="112" y1="98" x2="112" y2="133" stroke="white" stroke-width="1.5" opacity="0.4"/>
+        <line x1="134" y1="98" x2="134" y2="133" stroke="white" stroke-width="1.5" opacity="0.4"/>
+        <!-- Crème haut -->
+        <ellipse cx="100" cy="88" rx="55" ry="7" fill="#fff0f6"/>
+        <path d="M45 88 Q58 77 71 88 Q84 77 97 88 Q110 77 123 88 Q136 77 149 88 Q155 77 155 88" fill="white" opacity="0.8"/>
+        <!-- Décos crème sur le côté bas -->
+        <circle cx="45" cy="155" r="5" fill="#c94c82" opacity="0.6"/>
+        <circle cx="155" cy="155" r="5" fill="#c94c82" opacity="0.6"/>
+        <circle cx="100" cy="162" r="5" fill="#d4a853" opacity="0.7"/>
+        <!-- Coeurs déco -->
+        <text x="72" y="165" font-size="12" fill="white" opacity="0.7">♥</text>
+        <text x="112" y="165" font-size="12" fill="white" opacity="0.7">♥</text>
+        <!-- BOUGIES (7 petites pour représenter 21) -->
+        <!-- Bougie 1 -->
+        <rect x="55" y="72" width="6" height="18" rx="2" fill="#e8649a"/>
+        <ellipse cx="58" cy="70" rx="4" ry="3" fill="#f4a7c3"/>
+        <path class="flamme" d="M58 70 C55 65 55 59 58 57 C61 59 61 65 58 70Z" fill="#d4a853"/>
+        <path class="flamme" d="M58 68 C57 64 57 61 58 59 C59 61 59 64 58 68Z" fill="#f9e8c1"/>
+        <!-- Bougie 2 -->
+        <rect x="68" y="70" width="6" height="20" rx="2" fill="#c94c82"/>
+        <ellipse cx="71" cy="68" rx="4" ry="3" fill="#f4a7c3"/>
+        <path class="flamme" style="animation-delay:0.1s" d="M71 68 C68 63 68 57 71 55 C74 57 74 63 71 68Z" fill="#d4a853"/>
+        <path class="flamme" style="animation-delay:0.1s" d="M71 66 C70 62 70 59 71 57 C72 59 72 62 71 66Z" fill="#f9e8c1"/>
+        <!-- Bougie 3 -->
+        <rect x="81" y="69" width="6" height="21" rx="2" fill="#f4a7c3"/>
+        <ellipse cx="84" cy="67" rx="4" ry="3" fill="#fce8f0"/>
+        <path class="flamme" style="animation-delay:0.2s" d="M84 67 C81 62 81 56 84 54 C87 56 87 62 84 67Z" fill="#d4a853"/>
+        <path class="flamme" style="animation-delay:0.2s" d="M84 65 C83 61 83 58 84 56 C85 58 85 61 84 65Z" fill="#f9e8c1"/>
+        <!-- Bougie 4 (centre) -->
+        <rect x="97" y="67" width="6" height="23" rx="2" fill="#e8649a"/>
+        <ellipse cx="100" cy="65" rx="4" ry="3" fill="#f4a7c3"/>
+        <path class="flamme" style="animation-delay:0.15s" d="M100 65 C97 60 97 54 100 52 C103 54 103 60 100 65Z" fill="#d4a853"/>
+        <path class="flamme" style="animation-delay:0.15s" d="M100 63 C99 59 99 56 100 54 C101 56 101 59 100 63Z" fill="#f9e8c1"/>
+        <!-- Bougie 5 -->
+        <rect x="113" y="69" width="6" height="21" rx="2" fill="#c94c82"/>
+        <ellipse cx="116" cy="67" rx="4" ry="3" fill="#f4a7c3"/>
+        <path class="flamme" style="animation-delay:0.25s" d="M116 67 C113 62 113 56 116 54 C119 56 119 62 116 67Z" fill="#d4a853"/>
+        <path class="flamme" style="animation-delay:0.25s" d="M116 65 C115 61 115 58 116 56 C117 58 117 61 116 65Z" fill="#f9e8c1"/>
+        <!-- Bougie 6 -->
+        <rect x="126" y="70" width="6" height="20" rx="2" fill="#f4a7c3"/>
+        <ellipse cx="129" cy="68" rx="4" ry="3" fill="#fce8f0"/>
+        <path class="flamme" style="animation-delay:0.05s" d="M129 68 C126 63 126 57 129 55 C132 57 132 63 129 68Z" fill="#d4a853"/>
+        <path class="flamme" style="animation-delay:0.05s" d="M129 66 C128 62 128 59 129 57 C130 59 130 62 129 66Z" fill="#f9e8c1"/>
+        <!-- Bougie 7 -->
+        <rect x="139" y="72" width="6" height="18" rx="2" fill="#e8649a"/>
+        <ellipse cx="142" cy="70" rx="4" ry="3" fill="#f4a7c3"/>
+        <path class="flamme" style="animation-delay:0.3s" d="M142 70 C139 65 139 59 142 57 C145 59 145 65 142 70Z" fill="#d4a853"/>
+        <path class="flamme" style="animation-delay:0.3s" d="M142 68 C141 64 141 61 142 59 C143 61 143 64 142 68Z" fill="#f9e8c1"/>
+        <!-- Texte 21 sur le gâteau -->
+        <text x="100" y="118" text-anchor="middle" font-family="'Cormorant Garamond', serif" font-size="22" font-weight="300" fill="#c94c82" opacity="0.9">21</text>
+        <!-- Perles déco -->
+        <circle cx="60" cy="125" r="3" fill="#d4a853"/>
+        <circle cx="80" cy="123" r="3" fill="#d4a853"/>
+        <circle cx="100" cy="122" r="3" fill="#d4a853"/>
+        <circle cx="120" cy="123" r="3" fill="#d4a853"/>
+        <circle cx="140" cy="125" r="3" fill="#d4a853"/>
+      </svg>
+    </div>
+
+    <div class="grand-souhait" id="grand-souhait">Joyeux<br>Anniversaire</div>
+    <div class="sous-souhait" id="sous-souhait">M I R A D I E &nbsp; 🌸</div>
+    <div class="badge-medecin" id="badge-medecin">🩺 Future Docteure Gynécologue ✨</div>
+    <p class="message-final" id="message-final">
+      Que tes 21 ans soient le début<br>
+      de tout ce que tu mérites.
+    </p>
+  </div>
+</div>
+
+<button class="btn-suivant" id="btn-suivant">Continuer →</button>
+
+<script>
+// ===== ÉTAT =====
+let currentScene = 1;
+const totalScenes = 6;
+let melodiePlaying = false;
+let audioCtx = null;
+
+// ===== PÉTALES =====
+const petalCanvas = document.getElementById('petals-canvas');
+const pCtx = petalCanvas.getContext('2d');
+let petals = [];
+function resizePetalCanvas() {
+  petalCanvas.width = window.innerWidth;
+  petalCanvas.height = window.innerHeight;
+}
+resizePetalCanvas();
+window.addEventListener('resize', resizePetalCanvas);
+function createPetal() {
+  return {
+    x: Math.random() * petalCanvas.width, y: -20,
+    size: Math.random() * 12 + 6,
+    speedY: Math.random() * 1.2 + 0.4,
+    speedX: (Math.random() - 0.5) * 0.8,
+    rotation: Math.random() * Math.PI * 2,
+    rotSpeed: (Math.random() - 0.5) * 0.04,
+    opacity: Math.random() * 0.35 + 0.15,
+    color: ['#f4a7c3','#e8649a','#fce8f0','#c94c82','#f9d0e5','#e8d5f5'][Math.floor(Math.random()*6)]
+  };
+}
+for (let i = 0; i < 30; i++) { let p = createPetal(); p.y = Math.random() * petalCanvas.height; petals.push(p); }
+function drawPetal(p) {
+  pCtx.save();
+  pCtx.translate(p.x, p.y); pCtx.rotate(p.rotation);
+  pCtx.globalAlpha = p.opacity; pCtx.fillStyle = p.color;
+  pCtx.beginPath(); pCtx.ellipse(0, 0, p.size, p.size * 0.55, 0, 0, Math.PI*2); pCtx.fill();
+  pCtx.restore();
+}
+function animPetals() {
+  pCtx.clearRect(0, 0, petalCanvas.width, petalCanvas.height);
+  petals.forEach(p => {
+    p.y += p.speedY; p.x += p.speedX + Math.sin(p.y * 0.01) * 0.3; p.rotation += p.rotSpeed;
+    if (p.y > petalCanvas.height + 20) Object.assign(p, createPetal());
+    drawPetal(p);
+  });
+  requestAnimationFrame(animPetals);
+}
+animPetals();
+
+// ===== ÉTOILES =====
+function createStars() {
+  const bg = document.getElementById('stars-bg');
+  for (let i = 0; i < 90; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    const size = Math.random() * 2.5 + 0.5;
+    star.style.cssText = `width:${size}px;height:${size}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--dur:${Math.random()*3+1.5}s;animation-delay:${Math.random()*3}s;`;
+    bg.appendChild(star);
+  }
+}
+createStars();
+
+// ===== MÉLODIE ANNIVERSAIRE (Web Audio) =====
+function jouerMelodie() {
+  if (melodiePlaying) return;
+  melodiePlaying = true;
+  try {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    // Notes "Joyeux Anniversaire" : Do Do Ré Do Fa Mi | Do Do Ré Do Sol Fa | Do Do Do(haut) La Fa Mi Ré | Sib Sib La Fa Sol Fa
+    const notes = [
+      261.63,261.63,293.66,261.63,349.23,329.63,
+      261.63,261.63,293.66,261.63,392.00,349.23,
+      261.63,261.63,523.25,440.00,349.23,329.63,293.66,
+      466.16,466.16,440.00,349.23,392.00,349.23
+    ];
+    const durees = [
+      0.4,0.2,0.6,0.6,0.6,1.0,
+      0.4,0.2,0.6,0.6,0.6,1.0,
+      0.4,0.2,0.6,0.6,0.6,0.6,1.0,
+      0.4,0.2,0.6,0.6,0.6,1.2
+    ];
+    let t = audioCtx.currentTime + 0.3;
+    notes.forEach((freq, i) => {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, t);
+      gain.gain.setValueAtTime(0, t);
+      gain.gain.linearRampToValueAtTime(0.18, t + 0.05);
+      gain.gain.linearRampToValueAtTime(0, t + durees[i] - 0.05);
+      osc.start(t); osc.stop(t + durees[i]);
+      t += durees[i] + 0.05;
+    });
+  } catch(e) { console.log('Audio non disponible'); }
+}
+
+// ===== CONFETTIS =====
+function lancerConfettis() {
+  const canvas = document.getElementById('confetti-canvas');
+  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+  const ctx = canvas.getContext('2d');
+  const colors = ['#e8649a','#f4a7c3','#d4a853','#f9e8c1','#c94c82','#fce8f0','#e8d5f5','#fff'];
+  let particles = [];
+  for (let i = 0; i < 220; i++) {
+    particles.push({
+      x: Math.random() * canvas.width,
+      y: -20 - Math.random() * 300,
+      w: Math.random() * 10 + 4, h: Math.random() * 6 + 3,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      speedY: Math.random() * 4 + 2, speedX: (Math.random() - 0.5) * 3,
+      rotation: Math.random() * Math.PI * 2, rotSpeed: (Math.random() - 0.5) * 0.12,
+      opacity: 1, shape: Math.random() > 0.5 ? 'rect' : 'circle'
+    });
+  }
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => {
+      p.y += p.speedY; p.x += p.speedX; p.rotation += p.rotSpeed;
+      if (p.y > canvas.height * 0.75) p.opacity -= 0.013;
+      ctx.save();
+      ctx.translate(p.x, p.y); ctx.rotate(p.rotation);
+      ctx.globalAlpha = Math.max(0, p.opacity); ctx.fillStyle = p.color;
+      if (p.shape === 'circle') { ctx.beginPath(); ctx.arc(0,0,p.w/2,0,Math.PI*2); ctx.fill(); }
+      else { ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h); }
+      ctx.restore();
+    });
+    particles = particles.filter(p => p.opacity > 0);
+    if (particles.length > 0) requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+// ===== ANIMATIONS PAR SCÈNE =====
+function animerNom() {
+  const nom = "Miradie";
+  const wrapper = document.getElementById('nom-wrapper');
+  wrapper.innerHTML = '';
+  nom.split('').forEach((l, i) => {
+    const span = document.createElement('span');
+    span.className = 'lettre';
+    span.textContent = l;
+    wrapper.appendChild(span);
+    setTimeout(() => { span.style.opacity = '1'; span.style.transform = 'translateY(0)'; }, i * 130 + 300);
+  });
+  setTimeout(() => {
+    document.getElementById('sous-titre').classList.add('visible');
+    document.getElementById('deco-top').classList.add('visible');
+  }, nom.length * 130 + 500);
+  setTimeout(() => { document.getElementById('annee-badge').classList.add('visible'); }, nom.length * 130 + 900);
+  setTimeout(() => { document.getElementById('deco-bottom').classList.add('visible'); }, nom.length * 130 + 1200);
+  setTimeout(() => showBtn(), nom.length * 130 + 1800);
+}
+
+function animerDistance() {
+  setTimeout(() => { document.getElementById('lp').classList.add('drawn'); }, 400);
+  setTimeout(() => { document.getElementById('coeur-ligne').classList.add('visible'); }, 2800);
+  setTimeout(() => {
+    document.getElementById('dist-titre').classList.add('visible');
+    document.getElementById('dist-sous').classList.add('visible');
+  }, 3200);
+  setTimeout(() => showBtn(), 4200);
+}
+
+function animerLettre() {
+  const elems = ['stetho','lettre-titre','p1','p2','p3','p4','signature'];
+  elems.forEach((id, i) => {
+    setTimeout(() => { document.getElementById(id).classList.add('visible'); }, i * 650 + 300);
+  });
+  setTimeout(() => showBtn('Lire le poème 🌷'), elems.length * 650 + 800);
+}
+
+function animerPoeme() {
+  document.getElementById('poeme-icon').classList.add('visible');
+  document.getElementById('poeme-titre').classList.add('visible');
+  ['v1','v2','v3','v4'].forEach((id, i) => {
+    setTimeout(() => { document.getElementById(id).classList.add('visible'); }, i * 800 + 500);
+  });
+  setTimeout(() => showBtn('Mes bénédictions 🙏'), 4 * 800 + 1000);
+}
+
+function animerBenedictions() {
+  document.getElementById('bene-titre').classList.add('visible');
+  ['b1','b2','b3','b4','b5'].forEach((id, i) => {
+    setTimeout(() => { document.getElementById(id).classList.add('visible'); }, i * 500 + 400);
+  });
+  setTimeout(() => showBtn('La surprise finale 🎂 ✨'), 5 * 500 + 1000);
+}
+
+function animerFinale() {
+  lancerConfettis();
+  jouerMelodie();
+  setTimeout(() => { document.getElementById('gateau-wrapper').classList.add('visible'); }, 300);
+  setTimeout(() => { document.getElementById('grand-souhait').classList.add('visible'); }, 900);
+  setTimeout(() => { document.getElementById('sous-souhait').classList.add('visible'); }, 1300);
+  setTimeout(() => { document.getElementById('badge-medecin').classList.add('visible'); }, 1700);
+  setTimeout(() => { document.getElementById('message-final').classList.add('visible'); }, 2200);
+}
+
+// ===== NAVIGATION =====
+function showBtn(label = 'Continuer →') {
+  const btn = document.getElementById('btn-suivant');
+  btn.textContent = label;
+  btn.classList.add('visible');
+}
+
+function goToScene(n) {
+  document.getElementById(`scene-${currentScene}`).classList.remove('active');
+  document.getElementById(`dot-${currentScene}`).classList.remove('active');
+  document.getElementById('btn-suivant').classList.remove('visible');
+  currentScene = n;
+  document.getElementById(`scene-${currentScene}`).classList.add('active');
+  document.getElementById(`dot-${currentScene}`).classList.add('active');
+  if (currentScene === 1) animerNom();
+  else if (currentScene === 2) animerDistance();
+  else if (currentScene === 3) animerLettre();
+  else if (currentScene === 4) animerPoeme();
+  else if (currentScene === 5) animerBenedictions();
+  else if (currentScene === 6) animerFinale();
+}
+
+document.getElementById('btn-suivant').addEventListener('click', () => {
+  if (currentScene < totalScenes) goToScene(currentScene + 1);
+});
+
+// LANCEMENT
+animerNom();
+</script>
+</body>
+</html>
